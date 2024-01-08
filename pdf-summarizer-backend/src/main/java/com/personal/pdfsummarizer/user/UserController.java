@@ -4,7 +4,8 @@ import com.personal.pdfsummarizer.common.constants.APIConstants;
 import com.personal.pdfsummarizer.common.models.BaseRequest;
 import com.personal.pdfsummarizer.common.models.BaseResponse;
 import com.personal.pdfsummarizer.user.models.request.CreateUserRequest;
-import com.personal.pdfsummarizer.user.models.response.CreateUserResponse;
+import com.personal.pdfsummarizer.user.models.request.GetUserRequest;
+import com.personal.pdfsummarizer.user.models.response.UserResponse;
 import com.personal.pdfsummarizer.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,10 +36,24 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = APIConstants.INTERNAL_SERVER_ERROR_MESSAGE),
             @ApiResponse(responseCode = "401", description = APIConstants.UNAUTHORIZED_MESSAGE),
             @ApiResponse(responseCode = "404", description = APIConstants.NOT_FOUND_MESSAGE),
-
     })
-    public Mono<ResponseEntity<BaseResponse<CreateUserResponse>>> createUser(@RequestBody @Valid BaseRequest<CreateUserRequest> request) {
+    public Mono<ResponseEntity<BaseResponse<UserResponse>>> createUser(@RequestBody @Valid BaseRequest<CreateUserRequest> request) {
         return userService.createUser(request.getData())
                 .map(BaseResponse::successResponse);
     }
+
+    @PostMapping("/get")
+    @Operation(summary = "Get a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = APIConstants.BAD_REQUEST_MESSAGE),
+            @ApiResponse(responseCode = "500", description = APIConstants.INTERNAL_SERVER_ERROR_MESSAGE),
+            @ApiResponse(responseCode = "401", description = APIConstants.UNAUTHORIZED_MESSAGE),
+            @ApiResponse(responseCode = "404", description = APIConstants.NOT_FOUND_MESSAGE),
+    })
+    public Mono<ResponseEntity<BaseResponse<UserResponse>>> getUser(@RequestBody @Valid BaseRequest<GetUserRequest> request) {
+        return userService.getUser(request.getData())
+                .map(BaseResponse::successResponse);
+    }
+
 }

@@ -1,7 +1,8 @@
 package com.personal.pdfsummarizer.user.constants;
 
 public enum UserError {
-    USER_EXISTS(400, "USER_EXISTS", "User already exists");
+    USER_EXISTS(400, "USER_EXISTS", "User already exists"),
+    USER_NOT_FOUND(404, "USER_NOT_FOUND", "User not found");
 
     private final Integer code;
     private final String businessCode;

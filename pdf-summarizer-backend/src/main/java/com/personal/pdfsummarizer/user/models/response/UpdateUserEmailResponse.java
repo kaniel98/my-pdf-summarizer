@@ -1,18 +1,15 @@
 package com.personal.pdfsummarizer.user.models.response;
 
-import com.personal.pdfsummarizer.summarizer.models.Summary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Builder
-public class CreateUserResponse {
+public class UpdateUserEmailResponse {
+    private String userID;
     private String email;
-    private HashMap<String, Summary> summaries;
 }
