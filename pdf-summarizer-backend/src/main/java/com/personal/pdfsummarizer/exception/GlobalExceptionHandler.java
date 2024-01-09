@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseStatusExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception ex) {
         log.error("Exception occurred: ", ex);
-        ErrorResponse errorResponse = new ErrorResponse(CommonError.INTERNAL_SERVER_ERROR.getCode(), CommonError.INTERNAL_SERVER_ERROR.getDescription(), null);
+        ErrorResponse errorResponse = new ErrorResponse(CommonError.INTERNAL_SERVER_ERROR.getCode(), CommonError.INTERNAL_SERVER_ERROR.getBusinessCode(), CommonError.INTERNAL_SERVER_ERROR.getDescription(), null);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -38,6 +38,7 @@ public class GlobalExceptionHandler extends ResponseStatusExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex) throws MethodArgumentNotValidException {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .statusCode(ex.getStatusCode().value())
+                .businessCode(CommonError.BAD_REQUEST.getBusinessCode())
                 .message(ex.getReason())
                 .build();
 
@@ -54,6 +55,7 @@ public class GlobalExceptionHandler extends ResponseStatusExceptionHandler {
         // Create the custom error response object
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setStatusCode(CommonError.BAD_REQUEST.getCode());
+        errorResponse.setBusinessCode(CommonError.BAD_REQUEST.getBusinessCode());
         errorResponse.setMessage(CommonError.BAD_REQUEST.getDescription());
         errorResponse.setErrors(errorMessages);
 
@@ -72,14 +74,14 @@ public class GlobalExceptionHandler extends ResponseStatusExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     protected ResponseEntity<ErrorResponse> handleBaseException(BaseException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(ex.getStatusCode(), ex.getDescription(), null);
+        ErrorResponse errorResponse = new ErrorResponse(ex.getStatusCode(), ex.getBusinessCode(), ex.getDescription(), null);
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ex.getStatusCode()));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         String message = ex.getMessage().split(":")[0];
-        ErrorResponse errorResponse = new ErrorResponse(CommonError.BAD_REQUEST.getCode(), CommonError.BAD_REQUEST.getDescription(), List.of(message));
+        ErrorResponse errorResponse = new ErrorResponse(CommonError.BAD_REQUEST.getCode(), CommonError.BAD_REQUEST.getBusinessCode(), CommonError.BAD_REQUEST.getDescription(), List.of(message));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 

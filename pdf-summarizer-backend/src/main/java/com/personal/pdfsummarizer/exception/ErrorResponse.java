@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 public class ErrorResponse {
     private int statusCode;
+    private String businessCode;
     private String message;
     private List<String> errors;
 }

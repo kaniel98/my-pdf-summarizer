@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class BaseException extends RuntimeException {
     private Integer statusCode;
+    private String businessCode;
     private String description;
 }

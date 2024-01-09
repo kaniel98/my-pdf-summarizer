@@ -1,7 +1,10 @@
 package com.personal.pdfsummarizer.user.constants;
 
+import lombok.Getter;
+
+@Getter
 public enum UserError {
-    USER_EXISTS(400, "USER_EXISTS", "User already exists"),
+    USER_EXISTS(400, "USER_EXISTS", "Another user with this email already exists"),
     USER_NOT_FOUND(404, "USER_NOT_FOUND", "User not found");
 
     private final Integer code;
@@ -12,17 +15,5 @@ public enum UserError {
         this.code = code;
         this.businessCode = businessCode;
         this.description = description;
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public String getBusinessCode() {
-        return businessCode;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }
