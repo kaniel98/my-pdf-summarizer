@@ -1,5 +1,8 @@
 package com.personal.pdfsummarizer.common.constants;
 
+import lombok.Getter;
+
+@Getter
 public enum CommonError {
     INTERNAL_SERVER_ERROR(500, "INTERNAL_SERVER_ERROR", "Internal server error"),
     BAD_REQUEST(400, "BAD_REQUEST", "Bad request"),
@@ -17,17 +20,5 @@ public enum CommonError {
         this.code = code;
         this.businessCode = businessCode;
         this.description = description;
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public String getBusinessCode() {
-        return businessCode;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }

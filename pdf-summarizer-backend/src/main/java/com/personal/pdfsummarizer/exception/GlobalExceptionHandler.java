@@ -36,6 +36,7 @@ public class GlobalExceptionHandler extends ResponseStatusExceptionHandler {
     // Handles the exceptions thrown by the ResponseStatus annotation
     @ExceptionHandler(ResponseStatusException.class)
     protected ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex) throws MethodArgumentNotValidException {
+        log.error("Exception occurred under ResponseStatusException.class: ", ex.getCause());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .statusCode(ex.getStatusCode().value())
                 .businessCode(CommonError.BAD_REQUEST.getBusinessCode())

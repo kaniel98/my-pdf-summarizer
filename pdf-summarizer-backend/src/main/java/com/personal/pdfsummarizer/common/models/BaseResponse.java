@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -28,6 +29,15 @@ public class BaseResponse<T> {
                         .data(data)
                         .timestamp(LocalDateTime.now())
                         .build());
+    }
+
+    public static <T> ResponseEntity<T> successResponse(T data, String contentType, String filename, String contentLength) {
+        return ResponseEntity.status(200)
+                .header(HttpHeaders.CONTENT_TYPE, contentType)
+                .header(HttpHeaders.CONTENT_LENGTH, contentLength)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"").body(data);
+
+
     }
 
     public static <T> ResponseEntity<BaseResponse<T>> failureResponse(T data) {
