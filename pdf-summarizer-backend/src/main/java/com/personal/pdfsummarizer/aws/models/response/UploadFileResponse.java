@@ -1,4 +1,4 @@
-package com.personal.pdfsummarizer.aws.models;
+package com.personal.pdfsummarizer.aws.models.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class PdfDownloadRequest {
+public class UploadFileResponse {
     private String key;
 }
