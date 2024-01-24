@@ -3,6 +3,7 @@ package com.personal.pdfsummarizer.summarizer.service.impl;
 import com.personal.pdfsummarizer.aws.models.request.PdfDownloadRequest;
 import com.personal.pdfsummarizer.aws.service.AWSS3Service;
 import com.personal.pdfsummarizer.common.models.BaseResponse;
+import com.personal.pdfsummarizer.summarizer.models.request.GenerateSummaryRequest;
 import com.personal.pdfsummarizer.summarizer.models.response.GenerateSummaryResponse;
 import com.personal.pdfsummarizer.summarizer.service.SummarizerService;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +34,17 @@ public class SummarizerServiceImpl implements SummarizerService {
     }
 
     @Override
-    public Mono<ResponseEntity<BaseResponse<GenerateSummaryResponse>>> generatePdfSummary(HttpHeaders headers, @RequestParam("file") Flux<ByteBuffer> file) {
-        return s3Service.uploadFile(headers, file).map(resp -> {
+    public Mono<ResponseEntity<BaseResponse<GenerateSummaryResponse>>> generatePdfSummary(HttpHeaders headers, GenerateSummaryRequest request, @RequestParam Flux<ByteBuffer> file) {
+        return s3Service.uploadFile(file, request.getFileName()).map(resp -> {
             GenerateSummaryResponse summaryResponse = GenerateSummaryResponse.builder()
                     .summary(resp.getBody().getData().getKey())
                     .build();
             return BaseResponse.successResponse(summaryResponse);
-        });
+        }).next();
+    }
+
+    @Override
+    public Mono<String> extractTextFromPdf(Flux<ByteBuffer> file) {
+        return null;
     }
 }

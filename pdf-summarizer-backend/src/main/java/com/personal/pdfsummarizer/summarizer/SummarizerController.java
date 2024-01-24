@@ -4,6 +4,7 @@ import com.personal.pdfsummarizer.aws.models.request.PdfDownloadRequest;
 import com.personal.pdfsummarizer.common.constants.APIConstants;
 import com.personal.pdfsummarizer.common.models.BaseRequest;
 import com.personal.pdfsummarizer.common.models.BaseResponse;
+import com.personal.pdfsummarizer.summarizer.models.request.GenerateSummaryRequest;
 import com.personal.pdfsummarizer.summarizer.models.response.GenerateSummaryResponse;
 import com.personal.pdfsummarizer.summarizer.service.SummarizerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,8 +52,8 @@ public class SummarizerController {
             @ApiResponse(responseCode = "401", description = APIConstants.UNAUTHORIZED_MESSAGE),
             @ApiResponse(responseCode = "404", description = APIConstants.NOT_FOUND_MESSAGE),
     })
-    public Mono<ResponseEntity<BaseResponse<GenerateSummaryResponse>>> generatePdfSummary(@RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file) {
-        return summarizerService.generatePdfSummary(headers, file);
+    public Mono<ResponseEntity<BaseResponse<GenerateSummaryResponse>>> generatePdfSummary(@RequestHeader HttpHeaders headers, @ModelAttribute GenerateSummaryRequest request, @RequestPart Flux<ByteBuffer> file) {
+        return summarizerService.generatePdfSummary(headers, request, file);
     }
 }
 

@@ -17,6 +17,7 @@
     </description>
     <properties>
         <java.version>17</java.version>
+        <apache.pdfbox.version>3.0.1</apache.pdfbox.version>
     </properties>
     <dependencies>
         <dependency>
@@ -62,6 +63,13 @@
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!--        PDF Parsing Dependencies -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>${apache.pdfbox.version}</version>
         </dependency>
 
         <!--        AWS Dependencies-->

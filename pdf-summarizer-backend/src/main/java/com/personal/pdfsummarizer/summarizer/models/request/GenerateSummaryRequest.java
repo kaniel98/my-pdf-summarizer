@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class GenerateSummaryRequest {
-    private String key;
+    private String fileName;
 }

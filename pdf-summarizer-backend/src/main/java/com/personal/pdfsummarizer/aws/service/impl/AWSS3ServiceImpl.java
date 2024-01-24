@@ -6,12 +6,10 @@ import com.personal.pdfsummarizer.aws.constants.S3Actions;
 import com.personal.pdfsummarizer.aws.models.response.UploadFileResponse;
 import com.personal.pdfsummarizer.aws.service.AWSS3Service;
 import com.personal.pdfsummarizer.common.CommonUtils;
-import com.personal.pdfsummarizer.common.constants.CommonError;
 import com.personal.pdfsummarizer.common.models.BaseException;
 import com.personal.pdfsummarizer.common.models.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -68,56 +66,42 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 
     // * Upload a single file method
     @Override
-    public Mono<ResponseEntity<BaseResponse<UploadFileResponse>>> uploadFile(HttpHeaders requestHeaders, Flux<ByteBuffer> file) {
-        // Header validation before uploading file
-        checkHeaders(requestHeaders);
+    public Flux<ResponseEntity<BaseResponse<UploadFileResponse>>> uploadFile(Flux<ByteBuffer> file, String fileName) {
 
         // Constructing required parameters for the upload request
-        String fileKey = UUID.randomUUID().toString();
-        long length = requestHeaders.getContentLength();
+        String fileKey = UUID.randomUUID() + "-" + fileName;
         Map<String, String> metadata = new HashMap<>();
-        MediaType mediaType = requestHeaders.getContentType();
-        if (mediaType != null) {
-            mediaType = MediaType.APPLICATION_OCTET_STREAM;
-        }
-        CompletableFuture<PutObjectResponse> uploadResponse = s3AsyncClient
-                .putObject(PutObjectRequest.builder()
-                                .bucket(s3Config.getBucketName())
-                                .contentLength(length)
-                                .key(fileKey)
-                                .contentType(mediaType.toString())
-                                .metadata(metadata)
-                                .build(),
-                        AsyncRequestBody.fromPublisher(file));
 
-        // Proceed to check the response and return the key if successful
-        return Mono.fromFuture(uploadResponse).map(resp -> {
-            checkResponse(resp, S3Actions.UPLOAD_FILE);
-            log.info("Uploaded file: key={}, length={}", fileKey, length);
-            return BaseResponse.successResponse(UploadFileResponse.builder().key(fileKey).build());
-        }).onErrorResume(error -> {
-            log.error("Error uploading file to S3", error);
-            return Mono.error(CommonUtils.baseExceptionHandler(error));
-        });
+        return file.flatMap(fileBuffer -> {
+                    long length = fileBuffer.remaining();
+                    CompletableFuture<PutObjectResponse> uploadResponse = s3AsyncClient
+                            .putObject(PutObjectRequest.builder()
+                                            .bucket(s3Config.getBucketName())
+                                            .contentLength(length)
+                                            .key(fileKey)
+                                            .contentType(MediaType.APPLICATION_PDF.toString())
+                                            .metadata(metadata)
+                                            .build(),
+                                    AsyncRequestBody.fromPublisher(file));
+
+                    return Mono.fromFuture(uploadResponse).map(response -> {
+                        checkResponse(response, S3Actions.UPLOAD_FILE);
+                        return response;
+                    });
+                })
+                // Proceed to check the response and return the key if successful
+                .map(responseMono -> {
+                    log.info("Uploaded file: key={}", fileKey);
+                    return BaseResponse.successResponse(UploadFileResponse.builder().key(fileKey).build());
+                }).onErrorResume(error -> {
+                    log.error("Error uploading file to S3", error);
+                    return Mono.error(CommonUtils.baseExceptionHandler(error));
+                });
     }
 
     // Helper function to check the headers before uploading the file
-    private void checkHeaders(HttpHeaders requestHeaders) {
-        // Check if file is being sent
-        long length = requestHeaders.getContentLength();
-        // Checking of length - Needed for AWS S3 to optimise the upload
-        // ! Without length, S3 may buffer the entire stream in memory before sending it to the server (Bad)
-        if (length <= 0) {
-            throw new BaseException(CommonError.BAD_REQUEST.getCode(), CommonError.BAD_REQUEST.getBusinessCode(), "Required header missing: Content-Length");
-        }
-        // Check for allowed file types - PDF or DOCX
-        MediaType mediaType = requestHeaders.getContentType();
-        if (mediaType == null) {
-            throw new BaseException(CommonError.BAD_REQUEST.getCode(), CommonError.BAD_REQUEST.getBusinessCode(), "Required header missing: Content-Type");
-        }
-//        if (!mediaType.equals(MediaType.APPLICATION_PDF) && !mediaType.equals(MediaType.APPLICATION_OCTET_STREAM) && !mediaType.equals(MediaType.valueOf("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
-//            throw new BaseException(CommonError.BAD_REQUEST.getCode(), CommonError.BAD_REQUEST.getBusinessCode(), "Unsupported file type. Only PDF or DOCX files are allowed.");
-//        }
+    private String checkContentType(ByteBuffer file) {
+        return "";
     }
 
     // Helper method to get metadata from the response from the API call to AWS S3
