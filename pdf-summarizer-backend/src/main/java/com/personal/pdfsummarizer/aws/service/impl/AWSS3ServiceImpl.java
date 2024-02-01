@@ -10,7 +10,7 @@ import com.personal.pdfsummarizer.common.models.BaseException;
 import com.personal.pdfsummarizer.common.models.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
+import org.apache.tika.Tika;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -34,6 +34,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 
     private final S3AsyncClient s3AsyncClient;
     private final S3ClientConfigurationProperties s3Config;
+    private final Tika tika = new Tika();
 
     // * Download file method
     @Override
@@ -66,11 +67,12 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 
     // * Upload a single file method
     @Override
-    public Flux<ResponseEntity<BaseResponse<UploadFileResponse>>> uploadFile(Flux<ByteBuffer> file, String fileName) {
+    public Mono<UploadFileResponse> uploadFile(Flux<ByteBuffer> file, String fileName, String contentType) {
 
         // Constructing required parameters for the upload request
         String fileKey = UUID.randomUUID() + "-" + fileName;
         Map<String, String> metadata = new HashMap<>();
+        // Check if the content type is supported
 
         return file.flatMap(fileBuffer -> {
                     long length = fileBuffer.remaining();
@@ -79,7 +81,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
                                             .bucket(s3Config.getBucketName())
                                             .contentLength(length)
                                             .key(fileKey)
-                                            .contentType(MediaType.APPLICATION_PDF.toString())
+                                            .contentType(contentType)
                                             .metadata(metadata)
                                             .build(),
                                     AsyncRequestBody.fromPublisher(file));
@@ -92,16 +94,11 @@ public class AWSS3ServiceImpl implements AWSS3Service {
                 // Proceed to check the response and return the key if successful
                 .map(responseMono -> {
                     log.info("Uploaded file: key={}", fileKey);
-                    return BaseResponse.successResponse(UploadFileResponse.builder().key(fileKey).build());
+                    return UploadFileResponse.builder().key(fileKey).build();
                 }).onErrorResume(error -> {
                     log.error("Error uploading file to S3", error);
                     return Mono.error(CommonUtils.baseExceptionHandler(error));
-                });
-    }
-
-    // Helper function to check the headers before uploading the file
-    private String checkContentType(ByteBuffer file) {
-        return "";
+                }).next();
     }
 
     // Helper method to get metadata from the response from the API call to AWS S3

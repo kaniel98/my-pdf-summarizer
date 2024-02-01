@@ -1,7 +1,6 @@
 package com.personal.pdfsummarizer.aws.service;
 
 import com.personal.pdfsummarizer.aws.models.response.UploadFileResponse;
-import com.personal.pdfsummarizer.common.models.BaseResponse;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -12,5 +11,6 @@ public interface AWSS3Service {
     // Unable to use custom BaseResponse class due to it interfering with downloadFile method
     Mono<ResponseEntity<Flux<ByteBuffer>>> downloadFile(String key);
 
-    Flux<ResponseEntity<BaseResponse<UploadFileResponse>>> uploadFile(Flux<ByteBuffer> file, String fileName);
+    // * Upload a single file method
+    Mono<UploadFileResponse> uploadFile(Flux<ByteBuffer> file, String fileName, String contentType);
 }

@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CommonUtils {
     // Random value added to password before hashing
-    private static final int saltLength = 16;
+    private static final int SALT_LENGTH = 16;
     // Length of the generated hash output in bytes
-    private static final int hashLength = 32;
+    private static final int HASH_LENGTH = 32;
     // Controls the number of threads and compute lanes used for hashing
-    private static final int parallelism = 1;
+    private static final int PARALLELISM = 1;
     // Amount of memory to use in kb during the hashing process
-    private static final int memory = 65536;
+    private static final int MEMORY = 65536;
     // Number of iterations to perform
-    private static final int iterations = 4;
+    private static final int ITERATIONS = 4;
 
 
     // * Helper function that is used to handle errors
@@ -33,7 +33,7 @@ public class CommonUtils {
     public static String pwHash(String password) {
         Argon2PasswordEncoder passwordEncoder = new Argon2PasswordEncoder(
                 // * Hashing parameters for basic development purposes
-                saltLength, hashLength, parallelism, memory, iterations);
+                SALT_LENGTH, HASH_LENGTH, PARALLELISM, MEMORY, ITERATIONS);
         return passwordEncoder.encode(password);
     }
 
@@ -41,7 +41,7 @@ public class CommonUtils {
     public static boolean pwVerify(String password, String hash) {
         Argon2PasswordEncoder passwordEncoder = new Argon2PasswordEncoder(
                 // * Hashing parameters for basic development purposes
-                saltLength, hashLength, parallelism, memory, iterations);
+                SALT_LENGTH, HASH_LENGTH, PARALLELISM, MEMORY, ITERATIONS);
         return passwordEncoder.matches(password, hash);
     }
 }

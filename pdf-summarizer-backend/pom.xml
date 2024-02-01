@@ -18,6 +18,8 @@
     <properties>
         <java.version>17</java.version>
         <apache.pdfbox.version>3.0.1</apache.pdfbox.version>
+        <tika.version>2.5.0</tika.version>
+        <feign.reactive.version>4.0.0</feign.reactive.version>
     </properties>
     <dependencies>
         <dependency>
@@ -39,6 +41,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+        <!--		Feign Reactive Dependency		-->
+        <dependency>
+            <groupId>com.playtika.reactivefeign</groupId>
+            <artifactId>feign-reactor-core</artifactId>
+            <version>${feign.reactive.version}</version>
+        </dependency>
+
 
         <!--		Dependencies that help with development -->
         <dependency>
@@ -67,9 +76,19 @@
 
         <!--        PDF Parsing Dependencies -->
         <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>${apache.pdfbox.version}</version>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>${tika.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parsers</artifactId>
+            <version>${tika.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parser-pdf-module</artifactId>
+            <version>${tika.version}</version>
         </dependency>
 
         <!--        AWS Dependencies-->

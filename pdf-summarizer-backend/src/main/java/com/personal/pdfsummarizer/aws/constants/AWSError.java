@@ -8,7 +8,8 @@ public enum AWSError {
     UPLOAD_FILE_ERROR(500, "UPLOAD_FILE_ERROR", "Error while uploading file"),
     DELETE_FILE_ERROR(500, "DELETE_FILE_ERROR", "Error while deleting file"),
     FILE_NOT_FOUND(404, "FILE_NOT_FOUND", "File not found"),
-    UNEXPECTED_AWS_ERROR(500, "UNEXPECTED_ERROR", "Unexpected error");
+    UNEXPECTED_AWS_ERROR(500, "UNEXPECTED_ERROR", "Unexpected error"),
+    UNSUPPORTED_CONTENT_TYPE(400, "UNSUPPORTED_CONTENT_TYPE", "Unsupported content type");
 
     private final Integer code;
     private final String businessCode;
