@@ -6,6 +6,7 @@ import com.personal.pdfsummarizer.aws.service.AWSS3Service;
 import com.personal.pdfsummarizer.common.CommonUtils;
 import com.personal.pdfsummarizer.common.models.BaseException;
 import com.personal.pdfsummarizer.common.models.BaseResponse;
+import com.personal.pdfsummarizer.external.service.ExternalService;
 import com.personal.pdfsummarizer.summarizer.constants.SummarizerError;
 import com.personal.pdfsummarizer.summarizer.models.request.GenerateSummaryRequest;
 import com.personal.pdfsummarizer.summarizer.models.response.GenerateSummaryResponse;
@@ -34,6 +35,7 @@ import java.util.List;
 public class SummarizerServiceImpl implements SummarizerService {
 
     private final AWSS3Service s3Service;
+    private final ExternalService externalService;
     private static final HashSet<String> allowedContentTypes = new HashSet<>(List.of(MediaType.APPLICATION_PDF_VALUE));
     private final Tika tika = new Tika();
 

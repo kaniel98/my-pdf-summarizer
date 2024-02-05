@@ -1,6 +1,6 @@
 package com.personal.pdfsummarizer.summarizer.models.request;
 
-import com.personal.pdfsummarizer.summarizer.models.constants.SummaryType;
+import com.personal.pdfsummarizer.summarizer.constants.SummaryType;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,6 @@
 package com.personal.pdfsummarizer.summarizer.models;
 
+import com.personal.pdfsummarizer.summarizer.models.request.GenerateSummaryRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,6 @@ public class Summary {
     private String pdfName;
     private String pdfPath;
     private String pdfText;
-    private Prompt prompt;
+    private GenerateSummaryRequest generateSummaryRequest;
     private String pdfSummary;
 }

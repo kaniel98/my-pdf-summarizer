@@ -44,8 +44,9 @@
         <!--		Feign Reactive Dependency		-->
         <dependency>
             <groupId>com.playtika.reactivefeign</groupId>
-            <artifactId>feign-reactor-core</artifactId>
+            <artifactId>feign-reactor-spring-cloud-starter</artifactId>
             <version>${feign.reactive.version}</version>
+            <type>pom</type>
         </dependency>
 
 
@@ -82,7 +83,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tika</groupId>
-            <artifactId>tika-parsers</artifactId>
+            <artifactId>tika-parsers-standard-package</artifactId>
             <version>${tika.version}</version>
         </dependency>
         <dependency>
